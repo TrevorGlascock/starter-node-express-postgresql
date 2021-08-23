@@ -17,13 +17,10 @@ function read(req, res, next) {
   res.json({ data });
 }
 
-function list(req, res, next) {
-  service
-    .list()
-    .then((data) => res.json({ data }))
-    .catch(next);
+async function list(req, res, next) {
+  const data = await productsService.list();
+  res.json({ data });
 }
-
 module.exports = {
   read: [productExists, read],
   list: [list],
