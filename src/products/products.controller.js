@@ -1,4 +1,5 @@
 const service = require("./products.service");
+const errBound = require("../errors/asyncErrorBoundary");
 
 /**************************** Middleware Functions ****************************/
 async function productExists(req, res, next) {
@@ -22,6 +23,6 @@ async function list(req, res, next) {
   res.json({ data });
 }
 module.exports = {
-  read: [productExists, read],
-  list: [list],
+  read: [errBound(productExists), read],
+  list: [errBound(list)],
 };
