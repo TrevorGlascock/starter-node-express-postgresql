@@ -36,41 +36,32 @@ function hasOnlyValidProps(req, res, next) {
 const hasRequiredProps = hasProperties("supplier_name", "supplier_email");
 
 // Ensures the supplierId in the url matches a valid supplier
-function supplierExists(req, res, next) {
-  service
-    .read(req.params.supplierId)
-    .then((supplier) => {
-      if (!supplier)
-        return next({ status: 404, message: `Supplier cannot be found.` });
-
-      res.locals.supplier = supplier;
-      return next();
-    })
-    .catch(next);
+async function supplierExists(req, res, next) {
+  const supplier = await service.read(req.params.supplierId);
+  if (!supplier)
+    return next({ status: 404, message: `Supplier cannot be found.` });
+  res.locals.supplier = supplier;
+  return next();
 }
 
 /**************************** CRUDL Operations ****************************/
 async function create(req, res, next) {
-  service
-    .create(req.body.data)
-    .then((data) => res.status(201).json({ data }))
-    .catch(next);
+  const data = await service.create(req.body.data);
+  res.status(201).json({ data });
 }
 
 async function update(req, res, next) {
   const { supplier_id } = res.locals.supplier;
   const newSupplier = { ...req.body.data, supplier_id };
-  service
-    .update(newSupplier)
-    .then((data) => res.json({ data }))
-    .catch(next);
+
+  const data = await service.update(newSupplier);
+  res.json({ data });
 }
 
 async function destroy(req, res, next) {
-  service
-    .delete(res.locals.supplier.supplier_id)
-    .then(() => res.sendStatus(204))
-    .catch(next);
+  const { supplier_id } = res.locals.supplier;
+  await service.delete(supplier_id);
+  res.sendStatus(204);
 }
 
 module.exports = {
