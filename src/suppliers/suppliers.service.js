@@ -4,7 +4,7 @@ function create(supplier) {
   return db("suppliers")
     .insert(supplier)
     .returning("*")
-    .then((rows) => rows[0]);
+    .then((rows) => rows[0]); //returning cannot use first() so it must be written out
 }
 
 function read(supplier_id) {
@@ -16,7 +16,7 @@ function update(newSupplier) {
     .select("*")
     .where({ supplier_id: newSupplier.supplier_id })
     .update(newSupplier, "*")
-    .then((rows) => rows[0]);
+    .first(); // select only version of then((rows) => rows[0]);
 }
 
 module.exports = {
