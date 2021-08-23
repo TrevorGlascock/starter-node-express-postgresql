@@ -1,5 +1,46 @@
+const service = require("./suppliers.service.js");
+const hasProperties = require("../errors/hasProperties");
+
+/**************************** Middleware Functions ****************************/
+const VALID_PROPERTIES = [
+  "supplier_name",
+  "supplier_address_line_1",
+  "supplier_address_line_2",
+  "supplier_city",
+  "supplier_state",
+  "supplier_zip",
+  "supplier_phone",
+  "supplier_email",
+  "supplier_notes",
+  "supplier_type_of_goods",
+];
+
+// Ensure the body of the request only possesses properties that are valid
+function hasOnlyValidProps(req, res, next) {
+  const { data = {} } = req.body;
+
+  const invalidFields = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
+  );
+
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+    });
+  }
+  return next();
+}
+
+// Ensures the body of the request contains all of the required properties
+const hasRequiredProps = hasProperties("supplier_name", "supplier_email");
+
+/**************************** CRUDL Operations ****************************/
 async function create(req, res, next) {
-  res.status(201).json({ data: { supplier_name: "new supplier" } });
+  service
+    .create(req.body.data)
+    .then((data) => res.status(201).json({ data }))
+    .catch(next);
 }
 
 async function update(req, res, next) {
@@ -11,7 +52,7 @@ async function destroy(req, res, next) {
 }
 
 module.exports = {
-  create,
+  create: [hasOnlyValidProps, hasRequiredProps, create],
   update,
   delete: destroy,
 };
