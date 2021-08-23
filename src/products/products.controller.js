@@ -1,11 +1,14 @@
+const service = require("./products.service");
+
 function read(req, res, next) {
   res.json({ data: { product_title: "some product title" } });
 }
 
 function list(req, res, next) {
-  res.json({
-    data: [{ product_title: "product 1" }, { product_title: "product 2" }],
-  });
+  service
+    .list()
+    .then((data) => res.json({ data }))
+    .catch(next);
 }
 
 module.exports = {
