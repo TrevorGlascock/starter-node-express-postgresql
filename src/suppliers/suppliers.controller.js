@@ -1,5 +1,6 @@
 const service = require("./suppliers.service.js");
 const hasProperties = require("../errors/hasProperties");
+const errBound = require("../errors/asyncErrorBoundary");
 
 /**************************** Middleware Functions ****************************/
 const VALID_PROPERTIES = [
@@ -65,7 +66,12 @@ async function destroy(req, res, next) {
 }
 
 module.exports = {
-  create: [hasOnlyValidProps, hasRequiredProps, create],
-  update: [supplierExists, hasOnlyValidProps, hasRequiredProps, update],
-  delete: [supplierExists, destroy],
+  create: [hasOnlyValidProps, hasRequiredProps, errBound(create)],
+  update: [
+    supplierExists,
+    hasOnlyValidProps,
+    hasRequiredProps,
+    errBound(update),
+  ],
+  delete: [supplierExists, errBound(destroy)],
 };
