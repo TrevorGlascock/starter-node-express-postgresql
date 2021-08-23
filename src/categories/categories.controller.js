@@ -1,10 +1,8 @@
 const service = require("./categories.service");
 
 function list(req, res, next) {
-  service
-    .list()
-    .then((data) => res.json({ data }))
-    .catch(next);
+  const data = await categoriesService.list();
+  res.json({ data });
 }
 
 module.exports = {
