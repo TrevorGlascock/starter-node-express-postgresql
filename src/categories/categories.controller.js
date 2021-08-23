@@ -1,12 +1,11 @@
 const service = require("./categories.service");
+const errBound = require("../errors/asyncErrorBoundary");
 
-function list(req, res, next) {
-  service
-    .list()
-    .then((data) => res.json({ data }))
-    .catch(next);
+async function list(req, res, next) {
+  const data = await service.list();
+  res.json({ data });
 }
 
 module.exports = {
-  list,
+  list: errBound(list),
 };

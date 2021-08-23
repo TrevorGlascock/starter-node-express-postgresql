@@ -1,17 +1,14 @@
 const service = require("./products.service");
+const errBound = require("../errors/asyncErrorBoundary");
 
 /**************************** Middleware Functions ****************************/
-function productExists(req, res, next) {
-  service
-    .read(req.params.productId)
-    .then((product) => {
-      if (!product)
-        return next({ status: 404, message: `Product cannot be found.` });
+async function productExists(req, res, next) {
+  const product = await service.read(req.params.productId);
+  if (!product)
+    return next({ status: 404, message: `Product cannot be found.` });
 
-      res.locals.product = product;
-      return next();
-    })
-    .catch(next);
+  res.locals.product = product;
+  return next();
 }
 
 /**************************** CRUDL Operations ****************************/
@@ -21,14 +18,11 @@ function read(req, res, next) {
   res.json({ data });
 }
 
-function list(req, res, next) {
-  service
-    .list()
-    .then((data) => res.json({ data }))
-    .catch(next);
+async function list(req, res, next) {
+  const data = await productsService.list();
+  res.json({ data });
 }
-
 module.exports = {
-  read: [productExists, read],
-  list: [list],
+  read: [errBound(productExists), read],
+  list: [errBound(list)],
 };
