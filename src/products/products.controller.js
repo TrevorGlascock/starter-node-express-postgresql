@@ -1,17 +1,13 @@
 const service = require("./products.service");
 
 /**************************** Middleware Functions ****************************/
-function productExists(req, res, next) {
-  service
-    .read(req.params.productId)
-    .then((product) => {
-      if (!product)
-        return next({ status: 404, message: `Product cannot be found.` });
+async function productExists(req, res, next) {
+  const product = await service.read(req.params.productId);
+  if (!product)
+    return next({ status: 404, message: `Product cannot be found.` });
 
-      res.locals.product = product;
-      return next();
-    })
-    .catch(next);
+  res.locals.product = product;
+  return next();
 }
 
 /**************************** CRUDL Operations ****************************/
