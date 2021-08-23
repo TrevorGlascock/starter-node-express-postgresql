@@ -5,11 +5,11 @@ function productExists(req, res, next) {
   service
     .read(req.params.productId)
     .then((product) => {
-      if (product) {
-        res.locals.product = product;
-        return next();
-      }
-      return next({ status: 404, message: `Product cannot be found.` });
+      if (!product)
+        return next({ status: 404, message: `Product cannot be found.` });
+
+      res.locals.product = product;
+      return next();
     })
     .catch(next);
 }

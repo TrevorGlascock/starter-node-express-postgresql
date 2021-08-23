@@ -35,6 +35,20 @@ function hasOnlyValidProps(req, res, next) {
 // Ensures the body of the request contains all of the required properties
 const hasRequiredProps = hasProperties("supplier_name", "supplier_email");
 
+// Ensures the supplierId in the url matches a valid supplier
+function supplierExists(req, res, next) {
+  service
+    .read(req.params.supplierId)
+    .then((supplier) => {
+      if (!supplier)
+        return next({ status: 404, message: `Supplier cannot be found.` });
+
+      res.locals.supplier = supplier;
+      return next();
+    })
+    .catch(next);
+}
+
 /**************************** CRUDL Operations ****************************/
 async function create(req, res, next) {
   service
