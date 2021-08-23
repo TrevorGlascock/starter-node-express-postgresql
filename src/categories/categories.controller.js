@@ -1,7 +1,7 @@
 const service = require("./categories.service");
 
-function list(req, res, next) {
-  const data = await categoriesService.list();
+async function list(req, res, next) {
+  const data = await service.list();
   res.json({ data });
 }
 
