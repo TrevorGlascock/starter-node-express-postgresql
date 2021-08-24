@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 
+/**************************** CRUDL Queries ****************************/
 function create(supplier) {
   return db("suppliers")
     .insert(supplier)

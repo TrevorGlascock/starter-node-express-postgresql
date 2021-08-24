@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-/**************************** CRUDL Operations ****************************/
+/**************************** CRUDL Queries ****************************/
 function read(product_id) {
   return db("products").select("*").where({ product_id }).first();
 }

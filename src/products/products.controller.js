@@ -11,7 +11,7 @@ async function productExists(req, res, next) {
   return next();
 }
 
-/**************************** CRUDL Operations ****************************/
+/**************************** CRUDL Operation Handlers ****************************/
 function read(req, res, next) {
   // Aliasing product as data
   const { product: data } = res.locals;
@@ -23,7 +23,7 @@ async function list(req, res, next) {
   res.json({ data });
 }
 
-/**************************** Aggregate Data Functions ****************************/
+/**************************** Aggregate Data Handlers ****************************/
 async function listOutOfStockCount(req, res, next) {
   res.json({ data: await service.listOutOfStockCount() });
 }

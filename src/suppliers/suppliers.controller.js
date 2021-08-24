@@ -45,7 +45,7 @@ async function supplierExists(req, res, next) {
   return next();
 }
 
-/**************************** CRUDL Operations ****************************/
+/**************************** CRUDL Operation Handlers ****************************/
 async function create(req, res, next) {
   const data = await service.create(req.body.data);
   res.status(201).json({ data });
