@@ -28,9 +28,23 @@ function listPriceSummary() {
     .groupBy("supplier_id");
 }
 
+function listTotalWeightByProduct() {
+  return db("products")
+    .select(
+      "product_sku",
+      "product_title",
+      db.raw(
+        //sum of weight multiplied by sum of quantity to get total weight
+        "sum(product_weight_in_lbs * product_quantity_in_stock) as total_weight_in_lbs"
+      )
+    )
+    .groupBy("product_title", "product_sku");
+}
+
 module.exports = {
   read,
   list,
   listOutOfStockCount,
   listPriceSummary,
+  listTotalWeightByProduct,
 };
