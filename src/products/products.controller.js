@@ -22,7 +22,14 @@ async function list(req, res, next) {
   const data = await productsService.list();
   res.json({ data });
 }
+
+/**************************** Aggregate Data Functions ****************************/
+async function listOutOfStockCount(req, res, next) {
+  res.json({ data: await service.listOutOfStockCount() });
+}
+
 module.exports = {
   read: [errBound(productExists), read],
   list: [errBound(list)],
+  listOutOfStockCount: [errBound(listOutOfStockCount)],
 };
