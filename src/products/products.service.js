@@ -1,8 +1,15 @@
 const db = require("../db/connection");
+const mapProperties = require("../utils/map-properties");
 
 /**************************** CRUDL Queries ****************************/
 function read(product_id) {
-  return db("products").select("*").where({ product_id }).first();
+  return db("products as p")
+    .join("products_categories as pc", "p.product_id", "pc.product_id")
+    .join("categories as c", "pc.category_id", "c.category_id")
+    .select("p.*", "c.*")
+    .where({ "p.product_id": product_id })
+    .first()
+    .then(addCategory);
 }
 
 function list() {
@@ -10,7 +17,6 @@ function list() {
 }
 
 /**************************** Aggregate Data Functions ****************************/
-
 function listOutOfStockCount() {
   return db("products")
     .select("product_quantity_in_stock as out_of_stock")
@@ -40,6 +46,13 @@ function listTotalWeightByProduct() {
     )
     .groupBy("product_title", "product_sku");
 }
+
+/**************************** Higher-Order Helper Fuctions ****************************/
+const addCategory = mapProperties({
+  category_id: "category.category_id",
+  category_name: "category.category_name",
+  category_description: "category.category_description",
+});
 
 module.exports = {
   read,
