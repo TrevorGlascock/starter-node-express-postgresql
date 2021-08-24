@@ -11,7 +11,7 @@ async function productExists(req, res, next) {
   return next();
 }
 
-/**************************** CRUDL Operations ****************************/
+/**************************** CRUDL Operation Handlers ****************************/
 function read(req, res, next) {
   // Aliasing product as data
   const { product: data } = res.locals;
@@ -22,7 +22,24 @@ async function list(req, res, next) {
   const data = await productsService.list();
   res.json({ data });
 }
+
+/**************************** Aggregate Data Handlers ****************************/
+async function listOutOfStockCount(req, res, next) {
+  res.json({ data: await service.listOutOfStockCount() });
+}
+
+async function listPriceSummary(req, res, next) {
+  res.json({ data: await service.listPriceSummary() });
+}
+
+async function listTotalWeightByProduct(req, res) {
+  res.json({ data: await service.listTotalWeightByProduct() });
+}
+
 module.exports = {
   read: [errBound(productExists), read],
   list: [errBound(list)],
+  listOutOfStockCount: [errBound(listOutOfStockCount)],
+  listPriceSummary: [errBound(listPriceSummary)],
+  listTotalWeightByProduct: [errBound(listTotalWeightByProduct)],
 };
