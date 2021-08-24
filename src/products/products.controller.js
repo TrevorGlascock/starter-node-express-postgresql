@@ -33,7 +33,7 @@ async function listPriceSummary(req, res, next) {
 }
 
 async function listTotalWeightByProduct(req, res) {
-  res.json({ data: await productsService.listTotalWeightByProduct() });
+  res.json({ data: await service.listTotalWeightByProduct() });
 }
 
 module.exports = {
