@@ -1,12 +1,15 @@
 const db = require("../db/connection");
 
+/**************************** CRUDL Operations ****************************/
+function read(product_id) {
+  return db("products").select("*").where({ product_id }).first();
+}
+
 function list() {
   return db("products").select("*");
 }
 
-function read(product_id) {
-  return db("products").select("*").where({ product_id }).first();
-}
+/**************************** Aggregate Data Functions ****************************/
 
 function listOutOfStockCount() {
   return db("products")
