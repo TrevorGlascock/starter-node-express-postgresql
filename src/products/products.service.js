@@ -20,7 +20,7 @@ function listOutOfStockCount() {
 }
 
 module.exports = {
-  list,
   read,
+  list,
   listOutOfStockCount,
 };
