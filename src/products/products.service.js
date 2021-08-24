@@ -9,7 +9,7 @@ function read(product_id) {
 }
 
 function listOutOfStockCount() {
-  return knex("products")
+  return db("products")
     .select("product_quantity_in_stock as out_of_stock")
     .count("product_id")
     .where({ product_quantity_in_stock: 0 })
